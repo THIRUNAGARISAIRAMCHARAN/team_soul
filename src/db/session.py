@@ -8,7 +8,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
-_DATABASE_URL = getenv("DATABASE_URL")
+def _normalize_database_url(url: str | None) -> str | None:
+    """Render and some providers use postgres://; SQLAlchemy requires postgresql://."""
+    if not url:
+        return None
+    if url.startswith("postgres://"):
+        return "postgresql://" + url[len("postgres://") :]
+    return url
+
+
+_DATABASE_URL = _normalize_database_url(getenv("DATABASE_URL"))
 _ENGINE = None
 _SESSION_FACTORY: sessionmaker[Session] | None = None
 
