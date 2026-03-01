@@ -3,3 +3,4 @@ gunicorn
 plotly
 pandas
 numpy
+streamlit
